@@ -1,0 +1,376 @@
+{{- $exchangeSecretName := printf "%s" (tpl (include "common.secrets.name" (dict "existingSecret" .Values.auth.exchange.existingSecret "defaultNameSuffix" "exchange" "context" $)) $) }}
+apiVersion: {{ include "common.capabilities.deployment.apiVersion" . }}
+kind: Deployment
+metadata:
+  name: {{ include "common.names.fullname" . }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  selector:
+    matchLabels: {{- include "common.labels.matchLabels" . | nindent 6 }}
+  {{- /* replica count for one bot is hardcoded to 1 */}}
+  replicas: 1
+  {{- /* bots need to be torn down before re-starting, thus the strategy is Recreate */}}
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels: {{- include "common.labels.standard" . | nindent 8 }}
+        {{- if .Values.podLabels }}
+        {{- include "common.tplvalues.render" (dict "value" .Values.podLabels "context" $) | nindent 8 }}
+        {{- end }}
+      {{- if or .Values.podAnnotations (and .Values.configuration (not .Values.configurationConfigMap)) (and .Values.database.syncDatabaseWithS3.enabled (include "freqtrade.s3cmd.createConfigmap" .)) (not .Values.auth.exchange.existingSecret) (not .Values.auth.api.existingSecret) (not .Values.auth.telegram.existingSecret) }}
+      annotations:
+        {{- if .Values.podAnnotations }}
+        {{- include "common.tplvalues.render" ( dict "value" .Values.podAnnotations "context" $) | nindent 8 }}
+        {{- end }}
+        {{- if and .Values.configuration (not .Values.configurationConfigMap) }}
+        {{- /* for inline configurations build a hash to allow recreation after config change */}}
+        checksum/freqtrade-configuration: {{ include (print $.Template.BasePath "/configmap-freqtrade.yaml") . | sha256sum }}
+        {{- end }}
+        {{- if and .Values.database.syncDatabaseWithS3.enabled (include "freqtrade.s3cmd.createConfigmap" .) }}
+        checksum/s3sync-configuration: {{ include (print $.Template.BasePath "/configmap-s3cmd.yaml") . | sha256sum }}
+        {{- end }}
+        {{- if not .Values.auth.api.existingSecret }}
+        checksum/api-secret: {{ include (print $.Template.BasePath "/secrets-api.yaml") . | sha256sum }}
+        {{- end }}
+        {{- if not .Values.auth.exchange.existingSecret }}
+        checksum/exchange-secret: {{ include (print $.Template.BasePath "/secrets-exchange.yaml") . | sha256sum }}
+        {{- end }}
+        {{- if not .Values.auth.telegram.existingSecret }}
+        checksum/telegram-secret: {{ include (print $.Template.BasePath "/secrets-telegram.yaml") . | sha256sum }}
+        {{- end }}
+      {{- end }}
+    spec:
+      {{- include "freqtrade.imagePullSecrets" . | nindent 6 }}
+      serviceAccountName: {{ template "freqtrade.serviceAccountName" . }}
+      {{- if .Values.hostAliases }}
+      hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.hostAliases "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.affinity }}
+      affinity: {{- include "common.tplvalues.render" (dict "value" .Values.affinity "context" $) | nindent 8 }}
+      {{- else }}
+      affinity:
+        podAffinity: {{- include "common.affinities.pods" (dict "type" .Values.podAffinityPreset "context" $) | nindent 10 }}
+        podAntiAffinity: {{- include "common.affinities.pods" (dict "type" .Values.podAntiAffinityPreset "context" $) | nindent 10 }}
+        nodeAffinity: {{- include "common.affinities.nodes" (dict "type" .Values.nodeAffinityPreset.type "key" .Values.nodeAffinityPreset.key "values" .Values.nodeAffinityPreset.values) | nindent 10 }}
+      {{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName | quote }}
+      {{- end }}
+      {{- if .Values.nodeSelector }}
+      nodeSelector: {{- include "common.tplvalues.render" (dict "value" .Values.nodeSelector "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.tolerations }}
+      tolerations: {{- include "common.tplvalues.render" (dict "value" .Values.tolerations "context" $) | nindent 8 }}
+      {{- end }}
+      {{- if .Values.podSecurityContext.enabled }}
+      securityContext: {{- omit .Values.podSecurityContext "enabled" | toYaml | nindent 8 }}
+      {{- end }}
+      {{- if or .Values.strategies.cloneStrategiesFromGit.enabled .Values.database.syncDatabaseWithS3.enabled }}
+      initContainers:
+        {{- if or .Values.strategies.cloneStrategiesFromGit.enabled }}
+        - name: git-clone-strategies
+          image: {{ include "git.image" . }}
+          imagePullPolicy: {{ .Values.git.pullPolicy | quote }}
+          {{- if .Values.strategies.cloneStrategiesFromGit.gitClone.command }}
+          command: {{- include "common.tplvalues.render" (dict "value" .Values.strategies.cloneStrategiesFromGit.gitClone.command "context" $) | nindent 12 }}
+          {{- else}}
+          command:
+            - /bin/bash
+            - -ec
+            - |
+              [[ -f "/opt/bitnami/scripts/git/entrypoint.sh" ]] && source "/opt/bitnami/scripts/git/entrypoint.sh"
+              git clone {{ .Values.strategies.cloneStrategiesFromGit.repository }} {{ if .Values.strategies.cloneStrategiesFromGit.branch }}--branch {{ .Values.strategies.cloneStrategiesFromGit.branch }} {{ end }}{{ .Values.strategies.cloneStrategiesFromGit.gitdir }}
+            {{- if .Values.strategies.cloneStrategiesFromGit.postGitCommands }}
+            {{- range .Values.strategies.cloneStrategiesFromGit.postGitCommands }}
+              {{ . }}
+            {{- end }}
+            {{- end }}
+          {{- end}}
+          {{- if .Values.strategies.cloneStrategiesFromGit.gitClone.args }}
+          args: {{- include "common.tplvalues.render" (dict "value" .Values.strategies.cloneStrategiesFromGit.gitClone.args "context" $) | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: freqtrade-strategies
+              mountPath: {{ .Values.strategies.cloneStrategiesFromGit.targetdir }}
+          {{- if .Values.strategies.cloneStrategiesFromGit.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.strategies.cloneStrategiesFromGit.extraVolumeMounts "context" $) | nindent 12 }}
+          {{- end }}
+          env:
+            - name: GIT_CLONE_DIR
+              value: {{ .Values.strategies.cloneStrategiesFromGit.gitdir }}
+            - name: TARGET_DIR
+              value: {{ .Values.strategies.cloneStrategiesFromGit.targetdir }}
+          {{- if .Values.strategies.cloneStrategiesFromGit.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.strategies.cloneStrategiesFromGit.extraEnvVars "context" $) | nindent 12 }}
+          {{- end }}
+        {{- end }}     
+        {{- if .Values.database.syncDatabaseWithS3.enabled }}
+        - name: s3sync-startup
+          image: {{ include "s3sync.image" . }}
+          imagePullPolicy: {{ .Values.s3sync.pullPolicy | quote }}
+          {{- if .Values.database.syncDatabaseWithS3.s3Init.command }}
+          command: {{- include "common.tplvalues.render" (dict "value" .Values.database.syncDatabaseWithS3.s3Init.command "context" $) | nindent 12 }}
+          {{- else}}
+          command:
+            - startup
+          {{- end}}
+          {{- if .Values.database.syncDatabaseWithS3.s3Init.args }}
+          args: {{- include "common.tplvalues.render" (dict "value" .Values.database.syncDatabaseWithS3.s3Init.args "context" $) | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: s3cmd-config
+              mountPath: /.s3cfg
+              subPath: .s3cfg
+            - name: freqtrade-database
+              mountPath: {{ .Values.database.syncDatabaseWithS3.targetdir }}
+          {{- if .Values.database.syncDatabaseWithS3.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.database.syncDatabaseWithS3.extraVolumeMounts "context" $) | nindent 12 }}
+          {{- end }}
+          {{- if .Values.database.syncDatabaseWithS3.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.database.syncDatabaseWithS3.extraEnvVars "context" $) | nindent 12 }}
+          {{- end }}
+          env:
+            {{- if .Values.containerSecurityContext.enabled }}
+            - name: USERID
+              value: {{ .Values.containerSecurityContext.runAsUser | quote }}
+            - name: GROUPID
+              value: {{ .Values.containerSecurityContext.runAsGroup | quote }}
+            {{- end }}
+            - name: S3_URL
+              value: {{ printf "%s%s/" .Values.database.syncDatabaseWithS3.url .Release.Name }}
+            - name: S3_DIRECTORY
+              value: {{ printf "%s/" .Values.database.syncDatabaseWithS3.targetdir }}
+          {{- if .Values.database.syncDatabaseWithS3.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.database.syncDatabaseWithS3.extraEnvVars "context" $) | nindent 12 }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+      containers:
+        - name: freqtrade
+          image: {{ include "freqtrade.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
+          {{- if .Values.containerSecurityContext.enabled }}
+          securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
+          {{- end }}
+          {{- if .Values.command }}
+          command: {{- include "common.tplvalues.render" (dict "value" .Values.command "context" $) | nindent 12 }}
+          {{- end }}
+          {{- if .Values.args }}
+          args: {{- include "common.tplvalues.render" (dict "value" .Values.args "context" $) | nindent 12 }}
+          {{- end }}
+          {{- if and (empty .Values.command) (empty .Values.args) }}
+          command:
+            - freqtrade
+          args:
+            - trade
+            - --config 
+            - /freqtrade/user_data/config/config.json
+            - --log
+            - /freqtrade/user_data/logs/{{ .Release.Name }}.log
+            - --strategy
+            - {{ .Values.strategy }}
+            - --db-url 
+            - sqlite:////freqtrade/user_data/database/{{ .Release.Name }}.sqlite
+          {{- end }}
+          env:
+            - name: FREQTRADE__API_SERVER__ENABLED
+              value: "True"
+            - name: FREQTRADE__API_SERVER__LISTEN_IP_ADDRESS
+              {{- if .Values.apiEnabled }}
+              value: "0.0.0.0"
+              {{- else }}
+              value: "127.0.0.1"
+              {{- end }}
+            - name: FREQTRADE__API_SERVER__LISTEN_PORT
+              value: {{ .Values.containerPort | quote }}
+            - name: FREQTRADE__API_SERVER__USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ tpl (include "common.secrets.name" (dict "existingSecret" .Values.auth.api.existingSecret "defaultNameSuffix" "api" "context" $)) $ }}
+                  key: {{ include "common.secrets.key" (dict "existingSecret" .Values.auth.api.existingSecret "key" "api-username") }}
+            - name: FREQTRADE__API_SERVER__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ tpl (include "common.secrets.name" (dict "existingSecret" .Values.auth.api.existingSecret "defaultNameSuffix" "api" "context" $)) $ }}
+                  key: {{ include "common.secrets.key" (dict "existingSecret" .Values.auth.api.existingSecret "key" "api-password") }}
+            - name: FREQTRADE__API_SERVER__JWT_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ tpl (include "common.secrets.name" (dict "existingSecret" .Values.auth.api.existingSecret "defaultNameSuffix" "api" "context" $)) $ }}
+                  key: {{ include "common.secrets.key" (dict "existingSecret" .Values.auth.api.existingSecret "key" "api-jwtsecret") }}
+            - name: FREQTRADE__EXCHANGE__KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ tpl (include "common.secrets.name" (dict "existingSecret" .Values.auth.exchange.existingSecret "defaultNameSuffix" "exchange" "context" $)) $ }}
+                  key: {{ include "common.secrets.key" (dict "existingSecret" .Values.auth.exchange.existingSecret "key" "exchange-key") }}
+            - name: FREQTRADE__EXCHANGE__SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ tpl (include "common.secrets.name" (dict "existingSecret" .Values.auth.exchange.existingSecret "defaultNameSuffix" "exchange" "context" $)) $ }}
+                  key: {{ include "common.secrets.key" (dict "existingSecret" .Values.auth.exchange.existingSecret "key" "exchange-secret") }}
+            - name: FREQTRADE__EXCHANGE__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ tpl (include "common.secrets.name" (dict "existingSecret" .Values.auth.exchange.existingSecret "defaultNameSuffix" "exchange" "context" $)) $ }}
+                  key: {{ include "common.secrets.key" (dict "existingSecret" .Values.auth.exchange.existingSecret "key" "exchange-password") }}
+            {{- if or .Values.auth.telegram.existingSecret .Values.auth.telegram.token }}
+            - name: FREQTRADE__TELEGRAM__TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: {{ tpl (include "common.secrets.name" (dict "existingSecret" .Values.auth.telegram.existingSecret "defaultNameSuffix" "telegram" "context" $)) $ }}
+                  key: {{ include "common.secrets.key" (dict "existingSecret" .Values.auth.telegram.existingSecret "key" "telegram-token") }}
+            {{- end }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.extraEnvVars "context" $) | nindent 12 }}
+          {{- if or .Values.extraEnvVarsCM .Values.extraEnvVarsSecret }}
+          envFrom:
+            {{- if .Values.extraEnvVarsCM }}
+            - configMapRef:
+                name: {{ tpl .Values.extraEnvVarsCM . | quote }}
+            {{- end }}
+            {{- if .Values.extraEnvVarsSecret }}
+            - secretRef:
+                name: {{ tpl .Values.extraEnvVarsSecret . | quote }}
+            {{- end }}
+          {{- end }}
+          {{- if .Values.containerPort }}
+          ports:
+            {{- if and .Values.apiEnabled .Values.containerPort }}
+            - name: freqtrade-api
+              containerPort: {{ .Values.containerPort }}
+            {{- end }}
+          {{- end }}
+          {{- if .Values.resources }}
+          resources: {{ toYaml .Values.resources | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            {{- if or .Values.configuration .Values.configurationConfigMap }}
+            - name: freqtrade-config
+              mountPath: /freqtrade/user_data/config
+            {{- end }}
+            - name: freqtrade-logs
+              mountPath: /freqtrade/user_data/logs
+            - name: freqtrade-strategies
+              mountPath: /freqtrade/user_data/strategies
+            - name: freqtrade-database
+              mountPath: /freqtrade/user_data/database
+        {{- if .Values.database.syncDatabaseWithS3.enabled }}
+        - name: s3sync-sync
+          image: {{ include "s3sync.image" . }}
+          imagePullPolicy: {{ .Values.s3sync.pullPolicy | quote }}
+          {{- if .Values.database.syncDatabaseWithS3.s3Sync.command }}
+          command: {{- include "common.tplvalues.render" (dict "value" .Values.database.syncDatabaseWithS3.s3Sync.command "context" $) | nindent 12 }}
+          {{- end}}
+          {{- if .Values.database.syncDatabaseWithS3.s3Sync.args }}
+          args: {{- include "common.tplvalues.render" (dict "value" .Values.database.syncDatabaseWithS3.s3Sync.args "context" $) | nindent 12 }}
+          {{- end }}
+          volumeMounts:
+            - name: s3cmd-config
+              mountPath: /.s3cfg
+              subPath: .s3cfg
+            - name: freqtrade-database
+              mountPath: {{ .Values.database.syncDatabaseWithS3.targetdir }}
+          {{- if .Values.database.syncDatabaseWithS3.extraVolumeMounts }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.database.syncDatabaseWithS3.extraVolumeMounts "context" $) | nindent 12 }}
+          {{- end }}
+          {{- if .Values.database.syncDatabaseWithS3.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.database.syncDatabaseWithS3.extraEnvVars "context" $) | nindent 12 }}
+          {{- end }}
+          env:
+            {{- if .Values.containerSecurityContext.enabled }}
+            - name: USERID
+              value: {{ .Values.containerSecurityContext.runAsUser | quote }}
+            - name: GROUPID
+              value: {{ .Values.containerSecurityContext.runAsGroup | quote }}
+            {{- end }}
+            - name: S3_URL
+              value: {{ printf "%s%s/" .Values.database.syncDatabaseWithS3.url .Release.Name }}
+            - name: S3_DIRECTORY
+              value: {{ printf "%s/" .Values.database.syncDatabaseWithS3.targetdir }}
+          {{- if .Values.database.syncDatabaseWithS3.extraEnvVars }}
+            {{- include "common.tplvalues.render" (dict "value" .Values.database.syncDatabaseWithS3.extraEnvVars "context" $) | nindent 12 }}
+          {{- end }}
+        {{- end }}
+      volumes:
+        {{- if or .Values.configuration .Values.configurationConfigMap }}
+        - name: freqtrade-config
+          configMap:
+            name: {{ include "freqtrade.configmapName" . }}
+        {{- end }}
+        - name: freqtrade-logs
+          emptyDir: {}
+        {{- if and .Values.database.syncDatabaseWithS3.enabled .Values.database.syncDatabaseWithS3.s3cfg }}
+        - name: s3cmd-config
+          configMap: 
+            name: {{ printf "%s-s3cmd-configuration" (include "common.names.fullname" .) }}
+            items:
+              - key: .s3cfg
+                path: .s3cfg
+        {{- end }}
+        {{- if not .Values.strategies.persistence }}
+        - name: freqtrade-strategies
+          emptyDir: {}
+        {{- else if .Values.strategies.existingClaim }}
+        - name: freqtrade-strategies
+          persistentVolumeClaim:
+            claimName: {{ .Values.strategies.existingClaim }}
+        {{- end }}
+        {{- if not .Values.database.persistence }}
+        - name: freqtrade-database
+          emptyDir: {}
+        {{- else if .Values.database.existingClaim }}
+        - name: freqtrade-database
+          persistentVolumeClaim:
+            claimName: {{ .Values.database.existingClaim }}
+        {{- end }}
+{{- if or (and .Values.strategies.persistence (not .Values.strategies.existingClaim)) (and .Values.database.persistence (not .Values.database.existingClaim)) }}
+  volumeClaimTemplates:
+  {{- if and .Values.strategies.persistence (not .Values.strategies.existingClaim) }}
+    - metadata:
+        name: "freqtrade-strategies"
+        {{- if .Values.strategies.annotations }}
+        annotations: {{- toYaml .Values.strategies.annotations | nindent 10 }}
+        {{- end }}
+      spec:
+        accessModes: {{- toYaml .Values.strategies.accessModes | nindent 10 }}
+        {{ $storage := dict "global" .Values.global "local" .Values.strategies }}
+        {{ include "freqtrade.storageClass" $storage  }}
+        resources:
+          requests:
+            storage: {{ .Values.strategies.size | quote }}
+        {{- if .Values.strategies.selector }}
+        selector: {{- include "common.tplvalues.render" (dict "value" .Values.strategies.selector "context" $) | nindent 10 }}
+        {{- else if .Values.strategies.existingVolume }}
+        selector:
+          matchLabels:
+            volume: {{ .Values.strategies.existingVolume }}
+        {{- end }}
+  {{- end }}   
+  {{- if and .Values.database.persistence (not .Values.database.existingClaim) }}
+    - metadata:
+        name: "freqtrade-database"
+        {{- if .Values.database.annotations }}
+        annotations: {{- toYaml .Values.database.annotations | nindent 10 }}
+        {{- end }}
+      spec:
+        accessModes: {{- toYaml .Values.database.accessModes | nindent 10 }}
+        {{ $storage := dict "global" .Values.global "local" .Values.database }}
+        {{ include "freqtrade.storageClass" $storage }}
+        resources:
+          requests:
+            storage: {{ .Values.database.size | quote }}
+        {{- if .Values.database.selector }}
+        selector: {{- include "common.tplvalues.render" (dict "value" .Values.database.selector "context" $) | nindent 10 }}
+        {{- else if .Values.database.existingVolume }}
+        selector:
+          matchLabels:
+            volume: {{ .Values.database.existingVolume }}
+        {{- end }}
+  {{- end }}   
+{{ end }}

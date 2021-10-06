@@ -1,0 +1,695 @@
+## @section Global parameters
+## Global Docker image parameters
+## Please, note that this will override the image parameters, including dependencies, configured to use the global value
+## Current available global Docker image parameters: imageRegistry, imagePullSecrets and storageClass
+
+## @param global.imageRegistry Global Docker image registry
+## @param global.imagePullSecrets Global Docker registry secret names as an array
+## @param global.storageClass Global StorageClass for Persistent Volume(s)
+##
+global:
+  imageRegistry: ""
+  ## E.g.
+  ## imagePullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  imagePullSecrets: []
+  storageClass: ""
+
+## @section Common parameters
+
+## @param nameOverride String to partially override freqtrade.fullname template (will maintain the release name)
+##
+nameOverride: ""
+## @param fullnameOverride String to fully override freqtrade.fullname template
+##
+fullnameOverride: ""
+## @param kubeVersion Force target Kubernetes version (using Helm capabilities if not set)
+##
+kubeVersion: ""
+## @param clusterDomain Kubernetes Cluster Domain
+##
+clusterDomain: cluster.local
+## @param extraDeploy Extra objects to deploy (value evaluated as a template)
+##
+extraDeploy: []
+## @param commonLabels Add labels to all the deployed resources
+##
+commonLabels: {}
+## @param commonAnnotations Add annotations to all the deployed resources
+##
+commonAnnotations: {}
+
+## @section Freqtrade parameters
+
+## Freqtrade image version
+## ref: https://hub.docker.com/r/freqtradeorg/freqtrade/tags/
+## @param image.registry Freqtrade image registry
+## @param image.repository Freqtrade image repository
+## @param image.tag Freqtrade image tag (immutable tags are recommended)
+## @param image.pullPolicy Freqtrade image pull policy
+## @param image.pullSecrets Specify docker-registry secret names as an array
+## @param image.debug Specify if debug logs should be enabled
+##
+image:
+  registry: docker.io
+  repository: freqtradeorg/freqtrade
+  tag: 2021.9
+  ## Specify a imagePullPolicy
+  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  pullPolicy: IfNotPresent
+  ## Optionally specify an array of imagePullSecrets.
+  ## Secrets must be manually created in the namespace.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ## Example:
+  ## pullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  pullSecrets: []
+  ## Set to true if you would like to see extra information on logs
+  ##
+  debug: false
+## Bitnami Git image version
+## ref: https://hub.docker.com/r/bitnami/git/tags/
+## @param git.registry Git image registry
+## @param git.repository Git image repository
+## @param git.tag Git image tag (immutable tags are recommended)
+## @param git.pullPolicy Git image pull policy
+## @param git.pullSecrets Specify docker-registry secret names as an array
+##
+git:
+  registry: docker.io
+  repository: bitnami/git
+  tag: 2.33.0-debian-10-r21
+  ## Specify a imagePullPolicy
+  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  pullPolicy: IfNotPresent
+  ## Optionally specify an array of imagePullSecrets.
+  ## Secrets must be manually created in the namespace.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ## e.g:
+  ## pullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  pullSecrets: []
+
+## s3-sync image version
+## ref: https://hub.docker.com/r/koehn/s3-sync/tags
+## @param s3sync.registry Git image registry
+## @param s3sync.repository Git image repository
+## @param s3sync.tag Git image tag (immutable tags are recommended)
+## @param s3sync.pullPolicy Git image pull policy
+## @param s3sync.pullSecrets Specify docker-registry secret names as an array
+##
+s3sync:
+  registry: docker.io
+  repository: koehn/s3-sync
+  tag: 2.0.2-15
+  ## Specify a imagePullPolicy
+  ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
+  ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
+  ##
+  pullPolicy: IfNotPresent
+  ## Optionally specify an array of imagePullSecrets.
+  ## Secrets must be manually created in the namespace.
+  ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/pull-image-private-registry/
+  ## e.g:
+  ## pullSecrets:
+  ##   - myRegistryKeySecretName
+  ##
+  pullSecrets: []
+## @param hostAliases Deployment pod host aliases
+## https://kubernetes.io/docs/concepts/services-networking/add-entries-to-pod-etc-hosts-with-host-aliases/
+##
+hostAliases: []
+## Command and args for running the container (set to default if not set). Use array form
+## @param command Override default container command (useful when using custom images)
+## @param args Override default container args (useful when using custom images)
+##
+command: []
+args: []
+## @param extraEnvVars Extra environment variables to be set on Freqtrade containers
+## E.g:
+## extraEnvVars:
+##   - name: FOO
+##     value: BAR
+##
+extraEnvVars: ""
+## @param extraEnvVarsCM ConfigMap with extra environment variables
+##
+extraEnvVarsCM: ""
+## @param extraEnvVarsSecret Secret with extra environment variables
+##
+extraEnvVarsSecret: ""
+
+## @section Freqtrade deployment parameters
+
+## @param podLabels Extra labels for Freqtrade pods
+## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/labels/
+##
+podLabels: {}
+## @param podAnnotations Pod annotations
+## ref: https://kubernetes.io/docs/concepts/overview/working-with-objects/annotations/
+##
+podAnnotations: {}
+## @param podAffinityPreset Pod affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`
+## ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
+##
+podAffinityPreset: ""
+## @param podAntiAffinityPreset Pod anti-affinity preset. Ignored if `affinity` is set. Allowed values: `soft` or `hard`
+## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#inter-pod-affinity-and-anti-affinity
+##
+podAntiAffinityPreset: soft
+## Node affinity preset
+## Ref: https://kubernetes.io/docs/concepts/scheduling-eviction/assign-pod-node/#node-affinity
+##
+nodeAffinityPreset:
+  ## @param nodeAffinityPreset.type Node affinity preset type. Ignored if `affinity` is set. Allowed values: `soft` or `hard`
+  ##
+  type: ""
+  ## @param nodeAffinityPreset.key Node label key to match Ignored if `affinity` is set.
+  ## E.g.
+  ## key: "kubernetes.io/e2e-az-name"
+  ##
+  key: ""
+  ## @param nodeAffinityPreset.values Node label values to match. Ignored if `affinity` is set.
+  ## E.g.
+  ## values:
+  ##   - e2e-az1
+  ##   - e2e-az2
+  ##
+  values: []
+## @param affinity Affinity for pod assignment
+## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
+## Note: podAffinityPreset, podAntiAffinityPreset, and  nodeAffinityPreset will be ignored when it's set
+##
+affinity: {}
+## @param nodeSelector Node labels for pod assignment. Evaluated as a template.
+## Ref: https://kubernetes.io/docs/user-guide/node-selection/
+##
+nodeSelector: {}
+## @param tolerations Tolerations for pod assignment. Evaluated as a template.
+## Ref: https://kubernetes.io/docs/concepts/configuration/taint-and-toleration/
+##
+tolerations: {}
+## @param priorityClassName Priority class name
+## ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/#priorityclass
+##
+priorityClassName: ""
+## Freqtrade pods' Security Context.
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
+## @param podSecurityContext.enabled Enabled Freqtrade pods' Security Context
+## @param podSecurityContext.fsGroup Set Freqtrade pod's Security Context fsGroup
+## @param podSecurityContext.sysctls sysctl settings of the Freqtrade pods
+##
+podSecurityContext:
+  enabled: false
+  fsGroup: 1000
+  ## sysctl settings
+  ## Example:
+  ## sysctls:
+  ## - name: net.core.somaxconn
+  ##   value: "10000"
+  ##
+  sysctls: []
+## Freqtrade Core containers' Security Context (only main container).
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+## @param containerSecurityContext.enabled Enabled Freqtrade Core containers' Security Context
+## @param containerSecurityContext.runAsUser Set Freqtrade Core container's Security Context runAsUser
+## @param containerSecurityContext.runAsNonRoot Set Freqtrade Core container's Security Context runAsNonRoot
+##
+containerSecurityContext:
+  enabled: true
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+## Freqtrade pods' resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+## Recommended resources for a bot instance are 2GB and 2 CPU cores
+## ref: https://github.com/freqtrade/freqtrade#min-hardware-required
+##
+## We usually recommend not to specify default resources and to leave this as a conscious
+## choice for the user. This also increases chances charts run on environments with little
+## resources, such as Minikube. If you do want to specify resources, uncomment the following
+## lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+## @param resources.limits The resources limits for Cassandra containers
+## @param resources.requests The requested resources for Cassandra containers
+##
+resources:
+  ## Example:
+  ## limits:
+  ##    cpu: 2
+  ##    memory: 4Gi
+  limits: {}
+  ## Examples:
+  ## requests:
+  ##    cpu: 2
+  ##    memory: 4Gi
+  requests: {}
+## @param extraVolumes Array to add extra volumes
+##
+extraVolumes: []
+## @param extraVolumeMounts Array to add extra mount
+##
+extraVolumeMounts: []
+## Pods Service Account
+## ref: https://kubernetes.io/docs/tasks/configure-pod-container/configure-service-account/
+##
+serviceAccount:
+  ## @param serviceAccount.create Enable creation of ServiceAccount for freqtrade pod
+  ##
+  create: false
+  ## @param serviceAccount.name The name of the ServiceAccount to use.
+  ## If not set and create is true, a name is generated using the `common.names.fullname` template
+  name: ""
+  ## @param serviceAccount.annotations Annotations for service account. Evaluated as a template.
+  ## Only used if `create` is `true`.
+  ##
+  annotations: {}
+  ## @param serviceAccount.autoMount Auto-mount the service account token in the pod
+  ##
+  autoMount: false
+## @param containerPorts [object] Container ports
+##
+containerPort: 8080
+## @section Traffic Exposure parameters
+
+## Freqtrade Service properties
+##
+service:
+  ## @param service.type API Service type
+  ##
+  type: ClusterIP
+  ## @param service.port API service port
+  ##
+  port: 8080
+  ## Node ports to expose
+  ## @param service.nodePort Node port for the API service
+  ## NOTE: choose port between <30000-32767>
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+  ##
+  nodePort: ""
+  ## @param service.targetPort [object] Target port reference value for the Loadbalancer service types can be specified explicitly.
+  ## Listeners for the Loadbalancer can be custom mapped to the http or https service.
+  ## Example: Mapping the https listener to targetPort http [http: https]
+  ##
+  targetPort: "8080"
+  ## @param service.loadBalancerIP LoadBalancer service IP address
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
+  ##
+  loadBalancerIP: ""
+  ## @param service.annotations Service annotations
+  ## This can be used to set the LoadBalancer service type to internal only.
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
+  ##
+  annotations: {}
+  ## @param service.externalTrafficPolicy Enable client source IP preservation
+  ## ref http://kubernetes.io/docs/tasks/access-application-cluster/create-external-load-balancer/#preserving-the-client-source-ip
+  ##
+  externalTrafficPolicy: Cluster
+## Configure the ingress resource that allows you to access the
+## Freqtrade bot's API. Set up the URL
+## ref: http://kubernetes.io/docs/user-guide/ingress/
+##
+ingress:
+  ## @param ingress.enabled Set to true to enable ingress record generation
+  ##
+  enabled: false
+  ## @param ingress.certManager Set this to true in order to add the corresponding annotations for cert-manager
+  ##
+  certManager: false
+  ## @param ingress.pathType Ingress path type
+  ##
+  pathType: ImplementationSpecific
+  ## @param ingress.apiVersion Force Ingress API version (automatically detected if not set)
+  ##
+  apiVersion: ""
+  ## @param ingress.hostname Default host for the ingress resource
+  ##
+  hostname: freqtrade-bot.local
+  ## @param ingress.path The Path to Nginx. You may need to set this to '/*' in order to use this with ALB ingress controllers.
+  ##
+  path: /
+  ## @param ingress.annotations Ingress annotations
+  ## For a full list of possible ingress annotations, please see
+  ## ref: https://github.com/kubernetes/ingress-nginx/blob/master/docs/user-guide/nginx-configuration/annotations.md
+  ##
+  ## If certManager is set to true, annotation kubernetes.io/tls-acme: "true" will automatically be set
+  ##
+  annotations: {}
+  ## @param ingress.tls Create TLS Secret
+  ## TLS certificates will be retrieved from a TLS secret with name: {{- printf "%s-tls" .Values.ingress.hostname }}
+  ## You can use the ingress.secrets parameter to create this TLS secret or relay on cert-manager to create it
+  ##
+  tls: false
+  ## @param ingress.extraHosts The list of additional hostnames to be covered with this ingress record.
+  ## Most likely the hostname above will be enough, but in the event more hosts are needed, this is an array
+  ## extraHosts:
+  ## - name: nginx.local
+  ##   path: /
+  ##
+  extraHosts: []
+  ## @param ingress.extraPaths Any additional arbitrary paths that may need to be added to the ingress under the main host.
+  ## For example: The ALB ingress controller requires a special rule for handling SSL redirection.
+  ## extraPaths:
+  ## - path: /*
+  ##   backend:
+  ##     serviceName: ssl-redirect
+  ##     servicePort: use-annotation
+  ##
+  extraPaths: []
+  ## @param ingress.extraTls The tls configuration for additional hostnames to be covered with this ingress record.
+  ## see: https://kubernetes.io/docs/concepts/services-networking/ingress/#tls
+  ## extraTls:
+  ## - hosts:
+  ##     - nginx.local
+  ##   secretName: nginx.local-tls
+  ##
+  extraTls: []
+  ## @param ingress.secrets If you're providing your own certificates, please use this to add the certificates as secrets
+  ## key and certificate should start with -----BEGIN CERTIFICATE----- or
+  ## -----BEGIN RSA PRIVATE KEY-----
+  ##
+  ## name should line up with a tlsSecret set further up
+  ## If you're using cert-manager, this is unneeded, as it will create the secret for you if it is not set
+  ##
+  ## It is also possible to create and manage the certificates outside of this helm chart
+  ## Please see README.md for more information
+  ## e.g:
+  ## - name: nginx.local-tls
+  ##   key:
+  ##   certificate:
+  ##
+  secrets: []
+## Configuration of strategy handling inside the pod
+## strategies can be mounted through an existing volume
+## or cloned from git
+##
+strategies:
+  ## Handles the strategy files inside the pod under /freqtrade/user_data/strategies
+  ## which will be mounted through an existing volume
+  ##
+  ## @param strategies.persistence Enable persistence using a `PersistentVolumeClaim`
+  persistence: true
+  ## @param strategies.storageClass Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass: ""
+  ## @param strategies.existingClaim Existing Persistent Volume Claim
+  ## then accept the value as an existing Persistent Volume Claim to which
+  ## the container should be bound
+  ##
+  existingClaim: ""
+  ## @param strategies.existingVolume Existing Persistent Volume for use as volume match label selector to the `volumeClaimTemplate`.
+  ## Ignored when `strategies.selector` is set.
+  ##
+  existingVolume: ""
+  ## @param strategies.selector Configure custom selector for existing Persistent Volume. Overwrites `strategies.existingVolume`
+  ## selector:
+  ##   matchLabels:
+  ##     volume:
+  ##
+  selector: {}
+  ## @param strategies.annotations Persistent Volume Claim annotations
+  ##
+  annotations: {}
+  ## @param strategies.accessModes Persistent Volume Access Modes
+  ##
+  accessModes:
+    - ReadWriteMany
+  ## @param strategies.size Persistent Volume Size
+  ##
+  size: 1Gi
+  ##
+  cloneStrategiesFromGit:
+    ## @param strategies.cloneStrategiesFromGit.enabled Get strategies a Git repository
+    ##
+    enabled: false
+    ## @param strategies.cloneStrategiesFromGit.repository Git Repository to clone static content from
+    ##
+    repository: "https://github.com/freqtrade/freqtrade-strategies.git"
+    ## @param strategies.cloneStrategiesFromGit.branch Git branch to checkout
+    ##
+    branch: "master"
+    ## @param strategies.cloneStrategiesFromGit.gitdir Git directory to clone to
+    ## will also create an environment variable GIT_CLONE_DIR
+    ##
+    gitdir: "/tmp/git"
+    ## @param strategies.cloneStrategiesFromGit.targetdir Target directory to mount the strategy volume
+    ## will also create an environment variable TARGET_DIR
+    ##
+    targetdir: "/mnt/strategies"
+    ## Additional configuration for git-clone-repository initContainer
+    ##
+    gitClone:
+      ## @param strategies.cloneStrategiesFromGit.gitClone.command Override default container command for git-clone-repository
+      ##
+      command: []
+      ## @param strategies.cloneStrategiesFromGit.gitClone.args Override default container args for git-clone-repository
+      ##
+      args: []
+    ## @param strategies.cloneStrategiesFromGit.postGitCommands Additional commands after git operation
+    ## Will be appended to the command: block to be executed inline
+    ## Environment variables GIT_CLONE_DIR and TARGET_DIR can be used
+    ## E.g:
+    ## postGitCommands:
+    ##   - "echo 'hello'"
+    ##   - "echo 'world'"
+    ##   - "cp -r $GIT_CLONE_DIR/user_data/strategies/berlinguyinca/* $TARGET_DIR"
+    postGitCommands: []
+    ## @param strategies.cloneStrategiesFromGit.extraEnvVars Additional environment variables to set for the in the containers that clone static site from git
+    ## E.g:
+    ## extraEnvVars:
+    ##   - name: FOO
+    ##     value: BAR
+    ##
+    extraEnvVars: []
+    ## @param strategies.cloneStrategiesFromGit.extraVolumeMounts Add extra volume mounts for the Git containers
+    ## Useful to mount keys to connect through ssh. (normally used with extraVolumes)
+    ## E.g:
+    ## extraVolumeMounts:
+    ##   - name: ssh-dir
+    ##     mountPath: /root/.ssh/
+    ##
+    extraVolumeMounts: []
+
+## Configuration of database handling inside the pod
+## database can be mounted through an existing volume
+## or synced from/to s3
+##
+database:
+  ## Handles the database files inside the pod under /freqtrade/user_data/database
+  ## which will be mounted through an existing volume
+  ##
+  ## @param database.persistence Enable persistence using a `PersistentVolumeClaim`
+  persistence: false
+  ## @param database.storageClass Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass: ""
+  ## @param database.existingClaim Existing Persistent Volume Claim
+  ## then accept the value as an existing Persistent Volume Claim to which
+  ## the container should be bound
+  ##
+  existingClaim: ""
+  ## @param database.existingVolume Existing Persistent Volume for use as volume match label selector to the `volumeClaimTemplate`.
+  ## Ignored when `strategies.selector` is set.
+  ##
+  existingVolume: ""
+  ## @param database.selector Configure custom selector for existing Persistent Volume. Overwrites `strategies.existingVolume`
+  ## selector:
+  ##   matchLabels:
+  ##     volume:
+  ##
+  selector: {}
+  ## @param database.annotations Persistent Volume Claim annotations
+  ##
+  annotations: {}
+  ## @param database.accessModes Persistent Volume Access Modes
+  ##
+  accessModes:
+    - ReadWriteMany
+  ## @param database.size Persistent Volume Size
+  ##
+  size: 1Gi  
+  ##
+  syncDatabaseWithS3:
+    ## @param database.syncDatabaseWithS3.enabled Get strategies a Git repository
+    ##
+    enabled: false
+    ## @param database.syncDatabaseWithS3.s3cfg configuration for s3cmd.
+    ## Will be translated into /.s3cmd in the sync container
+    ## see https://s3tools.org/kb/item14.htm for all available values in s3cfg
+    s3cfg:
+      access_key: ""
+      secret_key: ""
+      host_base: ""
+      host_bucket: ""
+      preserve_attrs: "False"
+    
+    ## @param database.syncDatabaseWithS3.url S3 url to sync from/to
+    ## a subfolder with the instance name will be appended automatically
+    ## needs to end with a trailing slash always, example:
+    ## url: "s3://testbucket/subdirectory/"
+    ##
+    url: ""
+    ## @param database.syncDatabaseWithS3.targetdir Target directory to mount the database volume
+    ##
+    targetdir: "/mnt/database"
+    ## Additional configuration for git-clone-repository initContainer
+    ##
+    s3Init:
+      ## @param database.syncDatabaseWithS3.s3Init.command Override default container command for the initial sync
+      ##
+      command: []
+      ## @param database.syncDatabaseWithS3.s3Init.args Override default container args for git-clone-repository
+      ##
+      args: []
+    ## Additional configuration for s3cmd sync container
+    ##
+    s3Sync:
+      ## @param database.syncDatabaseWithS3.s3Sync.command Override default container command for the continous sync
+      ##
+      command: []
+      ## @param database.syncDatabaseWithS3.s3Sync.args Override default container args for git-clone-repository
+      ##
+      args: []
+
+    ## @param database.syncDatabaseWithS3.extraEnvVars Additional environment variables to set for the container with s3cmd
+    ## E.g:
+    ## extraEnvVars:
+    ##   - name: FOO
+    ##     value: BAR
+    ##
+    extraEnvVars: []
+    ## @param database.syncDatabaseWithS3.extraVolumeMounts Additional volume monts for the container with s3cmd
+    ## Useful to mount keys to connect through ssh. (normally used with extraVolumes)
+    ## E.g:
+    ## extraVolumeMounts:
+    ##   - name: ssh-dir
+    ##     mountPath: /root/.ssh/
+    ##
+    extraVolumeMounts: []
+## Authentication
+## @param auth.exchange.existingSecret Name of an existing secret containing exchange-key, exchange-secret, exchange-password
+## @param auth.exchange.key API key to use for the exchange
+## @param auth.exchange.secret API secret to use for the exchange
+## @param auth.exchange.password API password to use for the exchange.
+## @param auth.api.existingSecret Name of an existing secret containing api-username, api-password and api-jwtsecret
+## @param auth.api.username API username for Freqtrade
+## @param auth.api.password API password for Freqtrade
+## @param auth.api.jwtSecretKey JSON Web Token key for API access to Freqtrade
+## @param auth.telegram.existingSecret Name of an existing secret containing telegram-token
+## @param auth.telegram.token Telegram bot token
+##
+auth:
+  exchange:
+    existingSecret: ""
+    key: ""
+    secret: ""
+    password: ""
+  api:
+    existingSecret: ""
+    username: ""
+    password: ""
+    jwtSecretKey: ""
+  telegram:
+    existingSecret: ""
+    token: ""
+## @param strategy Name of the strategy to use
+## must be a strategy, that is available in the /freqtrade/user_data/strategies folder
+## otherwise the deployment will enter a failed state, when run with `trade` command
+strategy: "SampleStrategy"
+## @param apiEnabled exposes the API-Server  on the port specified in `containerPorts.api`
+## this sets environment variables in the main pod, and therefor overrides the `config.json`
+## so be aware when setting it in different places, this might lead to unexpected behavior
+## Internally the API-Server is always enabled, to make use of the `rest_client.py`
+## for the `preStop` hook to shutdown the bot more gracefully.
+apiEnabled: true
+## To configure Freqtrade, you must specify ONE of the following two options.
+## @param configurationConfigMap Specifies the name of an externally-defined ConfigMap to use as the 
+## configuration (this is mutually exclusive with `configuration`)
+## Helm will not manage the contents of this ConfigMap, it is your responsibility to create it.
+## e.g:
+##   configurationConfigMap: freqtrade
+##
+## The layout of the configmap is expected to be as follows:
+## data:
+##   filename.json: |
+##     {
+##       "key": "value"
+##     }
+## 
+## The configmap will be mounted under /freqtrade/user_data/config with all files contained
+## As this deployment uses --config /freqtrade/user_data/config/config.json you might also need to
+## override `command` and `args` if another file than the above shall be used as config.
+##
+configurationConfigMap: ""
+## @param configuration [object] Specifies Freqtrade's configuration directly in YAML format
+## which is then converted to config.json and placed inside the container.
+## When config is used, Helm manages Freqtrade's configuration ConfigMap as
+## part of the release, and configurationConfigMap is ignored.
+## Refer to https://www.freqtrade.io/en/stable/configuration/ for available options.
+##
+configuration:
+  max_open_trades: 5
+  stake_currency: USDT
+  stake_amount: 500
+  tradable_balance_ratio: 0.99
+  fiat_display_currency: USD
+  dry_run: true
+  cancel_open_orders_on_exit: false
+  unfilledtimeout:
+    buy: 10
+    sell: 30
+  bid_strategy:
+    price_side: bid
+    ask_last_balance: 0
+    use_order_book: false
+    order_book_top: 1
+    check_depth_of_market:
+      enabled: false
+      bids_to_ask_delta: 1
+  ask_strategy:
+    price_side: ask
+    use_order_book: false
+    order_book_min: 1
+    order_book_max: 1
+    use_sell_signal: true
+    sell_profit_only: false
+    ignore_roi_if_buy_signal: false
+  exchange:
+    name: binance
+    ccxt_config:
+      enableRateLimit: true
+      rateLimit: 200
+    ccxt_async_config:
+      enableRateLimit: true
+      rateLimit: 200
+    pair_whitelist:
+    - .*/USDT
+    pair_blacklist: []
+  pairlists:
+  - method: StaticPairList
+  telegram:
+    enabled: false
+  api_server:
+    enabled: false
+    listen_ip_address: 127.0.0.1
+    listen_port: 8080
+    username: ftapi
+    password: supersecret123!
+  bot_name: freqtrade
+  initial_state: running
