@@ -1,14 +1,15 @@
+apiVersion: v2
+name: freqtrade
+description: A free and open source crypto trading bot written in Python
+type: application
 annotations:
   category: Financial
-apiVersion: v2
-appVersion: "2021.9"
 dependencies:
   - name: common
     repository: https://charts.bitnami.com/bitnami
     tags:
       - bitnami-common
     version: 1.x.x
-description: A free and open source crypto trading bot written in Python
 engine: gotpl
 home: https://github.com/nightshift2k/helm-charts/tree/master/charts/freqtrade
 icon: https://raw.githubusercontent.com/freqtrade/freqtrade/develop/docs/images/logo.png
@@ -20,7 +21,7 @@ keywords:
 maintainers:
   - email: join.the.nightshift@protonmail.com
     name: nightshift2k
-name: freqtrade
 sources:
   - https://www.freqtrade.io/
-version: 0.0.2
+version: 0.0.3
+appVersion: "2021.9"

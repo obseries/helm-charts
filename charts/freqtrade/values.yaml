@@ -200,6 +200,23 @@ tolerations: {}
 ## ref: https://kubernetes.io/docs/concepts/configuration/pod-priority-preemption/#priorityclass
 ##
 priorityClassName: ""
+## @param terminationGracePeriodSeconds How many seconds to wait before terminating a pod
+##
+terminationGracePeriodSeconds: 60
+## @param topologySpreadConstraints Topology spread constraints rely on node labels to identify the topology domain(s) that each Node is in
+## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
+## 
+## An example how to enforce scheduling one freqtrade chart (equals 1 bot) per node:
+##
+## topologySpreadConstraints:
+##   - maxSkew: 1
+##     topologyKey: kubernetes.io/hostname
+##     whenUnsatisfiable: DoNotSchedule
+##     labelSelector:
+##       matchLabels:
+##         app.kubernetes.io/name: freqtrade
+##
+topologySpreadConstraints: []
 ## Freqtrade pods' Security Context.
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-pod
 ## @param podSecurityContext.enabled Enabled Freqtrade pods' Security Context
