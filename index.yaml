@@ -5,6 +5,36 @@ entries:
       category: Financial
     apiVersion: v2
     appVersion: "2021.9"
+    created: "2021-10-14T13:38:34.022878532Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: A free and open source crypto trading bot written in Python
+    digest: 64432063f4e79d33d2e2454e3c2c1c3554d7ea36e92159acdda3a4f2d4dec4c1
+    home: https://github.com/nightshift2k/helm-charts/tree/master/charts/freqtrade
+    icon: https://raw.githubusercontent.com/freqtrade/freqtrade/develop/docs/images/logo.png
+    keywords:
+    - freqtrade
+    - crypto
+    - algotrading
+    - python
+    maintainers:
+    - email: join.the.nightshift@protonmail.com
+      name: nightshift2k
+    name: freqtrade
+    sources:
+    - https://www.freqtrade.io/
+    type: application
+    urls:
+    - https://github.com/nightshift2k/helm-charts/releases/download/freqtrade-0.0.3/freqtrade-0.0.3.tgz
+    version: 0.0.3
+  - annotations:
+      category: Financial
+    apiVersion: v2
+    appVersion: "2021.9"
     created: "2021-10-06T12:56:04.887854079Z"
     dependencies:
     - name: common
@@ -30,4 +60,4 @@ entries:
     urls:
     - https://github.com/nightshift2k/helm-charts/releases/download/freqtrade-0.0.2/freqtrade-0.0.2.tgz
     version: 0.0.2
-generated: "2021-10-06T12:56:04.88785978Z"
+generated: "2021-10-14T13:38:34.023110635Z"
