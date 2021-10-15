@@ -1,0 +1,26 @@
+apiVersion: v2
+name: binance-proxy
+description: "A websocket proxy written in GoLang, that caches the endpoints: klines, depth, ticker/24hr, and exchangeInfo. It resembles the Binance API behaviour. And has a primary usecase to eliminate ratelimits when querying the Binance API from a single IP."
+type: application
+annotations:
+  category: Financial
+dependencies:
+  - name: common
+    repository: https://charts.bitnami.com/bitnami
+    tags:
+      - bitnami-common
+    version: 1.x.x
+engine: gotpl
+home: https://github.com/nightshift2k/helm-charts/tree/master/charts/binance-proxy
+keywords:
+  - algotrading
+  - golang
+  - crypto
+  - binance
+maintainers:
+  - email: join.the.nightshift@protonmail.com
+    name: nightshift2k
+sources:
+  - https://github.com/nightshift2k/binance-proxy
+version: 0.0.1
+appVersion: "1.2.3"
