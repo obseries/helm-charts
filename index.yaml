@@ -1,5 +1,38 @@
 apiVersion: v1
 entries:
+  binance-proxy:
+  - annotations:
+      category: Financial
+    apiVersion: v2
+    appVersion: 1.2.3
+    created: "2021-10-15T08:28:56.754346278Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: 'A websocket proxy written in GoLang, that caches the endpoints:
+      klines, depth, ticker/24hr, and exchangeInfo. It resembles the Binance API behaviour.
+      And has a primary usecase to eliminate ratelimits when querying the Binance
+      API from a single IP.'
+    digest: 3f8dc6c1e93609901124e2cb521369c616204b0cfd65b9870aeb0d74ca7f335c
+    home: https://github.com/nightshift2k/helm-charts/tree/master/charts/binance-proxy
+    keywords:
+    - algotrading
+    - golang
+    - crypto
+    - binance
+    maintainers:
+    - email: join.the.nightshift@protonmail.com
+      name: nightshift2k
+    name: binance-proxy
+    sources:
+    - https://github.com/nightshift2k/binance-proxy
+    type: application
+    urls:
+    - https://github.com/nightshift2k/helm-charts/releases/download/binance-proxy-0.0.1/binance-proxy-0.0.1.tgz
+    version: 0.0.1
   freqtrade:
   - annotations:
       category: Financial
@@ -60,4 +93,4 @@ entries:
     urls:
     - https://github.com/nightshift2k/helm-charts/releases/download/freqtrade-0.0.2/freqtrade-0.0.2.tgz
     version: 0.0.2
-generated: "2021-10-14T13:38:34.023110635Z"
+generated: "2021-10-15T08:28:56.754356078Z"
