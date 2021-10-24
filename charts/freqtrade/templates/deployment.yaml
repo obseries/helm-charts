@@ -249,7 +249,7 @@ spec:
               containerPort: {{ .Values.containerPort }}
             {{- end }}
           {{- end }}
-          {{- if .Values.resources }}
+          {{- if .Values.resources }}         
           resources: {{ toYaml .Values.resources | nindent 12 }}
           {{- end }}
           volumeMounts:
