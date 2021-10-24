@@ -4,6 +4,38 @@ entries:
   - annotations:
       category: Financial
     apiVersion: v2
+    appVersion: 1.2.4
+    created: "2021-10-24T11:03:39.389879406Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: 'A websocket proxy written in GoLang, that caches the endpoints:
+      klines, depth, ticker/24hr, and exchangeInfo. It resembles the Binance API behaviour.
+      And has a primary usecase to eliminate ratelimits when querying the Binance
+      API from a single IP.'
+    digest: 899de0b12e3b89894cfd787a81b4742d2a13af2cef57c598f147068999f7218c
+    home: https://github.com/nightshift2k/helm-charts/tree/master/charts/binance-proxy
+    keywords:
+    - algotrading
+    - golang
+    - crypto
+    - binance
+    maintainers:
+    - email: join.the.nightshift@protonmail.com
+      name: nightshift2k
+    name: binance-proxy
+    sources:
+    - https://github.com/nightshift2k/binance-proxy
+    type: application
+    urls:
+    - https://github.com/nightshift2k/helm-charts/releases/download/binance-proxy-0.0.2/binance-proxy-0.0.2.tgz
+    version: 0.0.2
+  - annotations:
+      category: Financial
+    apiVersion: v2
     appVersion: 1.2.3
     created: "2021-10-15T08:28:56.754346278Z"
     dependencies:
@@ -34,6 +66,36 @@ entries:
     - https://github.com/nightshift2k/helm-charts/releases/download/binance-proxy-0.0.1/binance-proxy-0.0.1.tgz
     version: 0.0.1
   freqtrade:
+  - annotations:
+      category: Financial
+    apiVersion: v2
+    appVersion: "2021.9"
+    created: "2021-10-24T11:03:39.57019468Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: A free and open source crypto trading bot written in Python
+    digest: f17225b4f6f49963df7187a6e2a2988980bc85d876d8affa539ad846174ecc0b
+    home: https://github.com/nightshift2k/helm-charts/tree/master/charts/freqtrade
+    icon: https://raw.githubusercontent.com/freqtrade/freqtrade/develop/docs/images/logo.png
+    keywords:
+    - freqtrade
+    - crypto
+    - algotrading
+    - python
+    maintainers:
+    - email: join.the.nightshift@protonmail.com
+      name: nightshift2k
+    name: freqtrade
+    sources:
+    - https://www.freqtrade.io/
+    type: application
+    urls:
+    - https://github.com/nightshift2k/helm-charts/releases/download/freqtrade-0.0.4/freqtrade-0.0.4.tgz
+    version: 0.0.4
   - annotations:
       category: Financial
     apiVersion: v2
@@ -93,4 +155,4 @@ entries:
     urls:
     - https://github.com/nightshift2k/helm-charts/releases/download/freqtrade-0.0.2/freqtrade-0.0.2.tgz
     version: 0.0.2
-generated: "2021-10-15T08:28:56.754356078Z"
+generated: "2021-10-24T11:03:39.57020828Z"
