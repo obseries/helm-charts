@@ -169,18 +169,15 @@ spec:
           args: {{- include "common.tplvalues.render" (dict "value" .Values.args "context" $) | nindent 12 }}
           {{- end }}
           {{- if and (empty .Values.command) (empty .Values.args) }}
-          command:
-            - freqtrade
-          args:
-            - trade
-            - --config 
-            - /freqtrade/user_data/config/config.json
-            - --log
-            - /freqtrade/user_data/logs/{{ .Release.Name }}.log
-            - --strategy
-            - {{ .Values.strategy }}
-            - --db-url 
-            - sqlite:////freqtrade/user_data/database/{{ .Release.Name }}.sqlite
+          command: ["/bin/sh","-c"]
+          args: 
+            - echo "Starting freqtrade...";
+              {{- with .Values.additionalPipModules }} {{- range . }}
+              pip install {{ . }} ;
+              {{- end }}
+              {{- end }}
+              freqtrade trade --config /freqtrade/user_data/config/config.json --log /freqtrade/user_data/logs/{{ .Release.Name }}.log --strategy {{ .Values.strategy }} --db-url sqlite:////freqtrade/user_data/database/{{ .Release.Name }}.sqlite
+            
           {{- end }}
           env:
             - name: FREQTRADE__API_SERVER__ENABLED

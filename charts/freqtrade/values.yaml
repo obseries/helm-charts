@@ -629,6 +629,9 @@ auth:
 ## must be a strategy, that is available in the /freqtrade/user_data/strategies folder
 ## otherwise the deployment will enter a failed state, when run with `trade` command
 strategy: "SampleStrategy"
+## @param additionalPipModules List of module names
+## List of modules that should be installed via `pip install` before running strategy
+additionalPipModules: ""
 ## @param apiEnabled exposes the API-Server  on the port specified in `containerPorts.api`
 ## this sets environment variables in the main pod, and therefor overrides the `config.json`
 ## so be aware when setting it in different places, this might lead to unexpected behavior
