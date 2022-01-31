@@ -212,7 +212,7 @@ priorityClassName: ""
 terminationGracePeriodSeconds: 60
 ## @param topologySpreadConstraints Topology spread constraints rely on node labels to identify the topology domain(s) that each Node is in
 ## Ref: https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
-## 
+##
 ## An example how to enforce scheduling one freqtrade chart (equals 1 bot) per node:
 ##
 ## topologySpreadConstraints:
@@ -547,7 +547,7 @@ database:
     - ReadWriteMany
   ## @param database.size Persistent Volume Size
   ##
-  size: 1Gi  
+  size: 1Gi
   ##
   syncDatabaseWithS3:
     ## @param database.syncDatabaseWithS3.enabled Get strategies a Git repository
@@ -562,7 +562,7 @@ database:
       host_base: ""
       host_bucket: ""
       preserve_attrs: "False"
-    
+
     ## @param database.syncDatabaseWithS3.url S3 url to sync from/to
     ## a subfolder with the instance name will be appended automatically
     ## needs to end with a trailing slash always, example:
@@ -646,7 +646,7 @@ additionalPipModules: ""
 ## for the `preStop` hook to shutdown the bot more gracefully.
 apiEnabled: true
 ## To configure Freqtrade, you must specify ONE of the following two options.
-## @param configurationConfigMap Specifies the name of an externally-defined ConfigMap to use as the 
+## @param configurationConfigMap Specifies the name of an externally-defined ConfigMap to use as the
 ## configuration (this is mutually exclusive with `configuration`)
 ## Helm will not manage the contents of this ConfigMap, it is your responsibility to create it.
 ## e.g:
@@ -658,7 +658,7 @@ apiEnabled: true
 ##     {
 ##       "key": "value"
 ##     }
-## 
+##
 ## The configmap will be mounted under /freqtrade/user_data/config with all files contained
 ## As this deployment uses --config /freqtrade/user_data/config/config.json you might also need to
 ## override `command` and `args` if another file than the above shall be used as config.
