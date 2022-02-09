@@ -1,4 +1,4 @@
-# nightshift2k's Helm Charts
+# Obseries's Helm Charts
 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
@@ -12,16 +12,16 @@ Please refer to Helm's [documentation](https://helm.sh/docs/) to get started.
 Once Helm is set up properly, add the repo as follows:
 
 ```console
-helm repo add nightshift2k https://nightshift2k.github.io/helm-charts
+helm repo add obseries https://obseries.github.io/helm-charts
 ```
 
-You can then run `helm search repo nightshift2k` to see the charts.
+You can then run `helm search repo obseries` to see the charts.
 
 ## Contributing
 
-The source code of all [Helm](https://helm.sh) charts can be found on Github: <https://github.com/nightshift2k/helm-charts/>
+The source code of all [Helm](https://helm.sh) charts can be found on Github: <https://github.com/obseries/helm-charts/>
 
 ## License
 
 <!-- Keep full URL links to repo files because this README syncs from main to gh-pages.  -->
-[Apache 2.0 License](https://github.com/nightshift2k/helm-charts/blob/main/LICENSE).
+[Apache 2.0 License](https://github.com/obseries/helm-charts/blob/main/LICENSE).
