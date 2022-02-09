@@ -23,5 +23,5 @@ maintainers:
     name: nightshift2k
 sources:
   - https://www.freqtrade.io/
-version: 0.0.4
-appVersion: "2021.9"
+version: 0.0.5
+appVersion: "2022.2"

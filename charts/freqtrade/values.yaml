@@ -54,7 +54,7 @@ commonAnnotations: {}
 image:
   registry: docker.io
   repository: freqtradeorg/freqtrade
-  tag: 2021.9
+  tag: 2022.1
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
