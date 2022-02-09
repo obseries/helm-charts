@@ -11,15 +11,15 @@ dependencies:
       - bitnami-common
     version: 1.x.x
 engine: gotpl
-home: https://github.com/nightshift2k/helm-charts/tree/master/charts/binance-proxy
+home: https://github.com/obseries/helm-charts/tree/master/charts/binance-proxy
 keywords:
   - algotrading
   - golang
   - crypto
   - binance
 maintainers:
-  - email: join.the.nightshift@protonmail.com
-    name: nightshift2k
+  - email: obseries@protonmail.com
+    name: obseries
 sources:
   - https://github.com/nightshift2k/binance-proxy
 version: 0.0.2

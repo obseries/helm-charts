@@ -11,7 +11,7 @@ dependencies:
       - bitnami-common
     version: 1.x.x
 engine: gotpl
-home: https://github.com/nightshift2k/helm-charts/tree/master/charts/freqtrade
+home: https://github.com/obseries/helm-charts/tree/master/charts/freqtrade
 icon: https://raw.githubusercontent.com/freqtrade/freqtrade/develop/docs/images/logo.png
 keywords:
   - freqtrade
@@ -19,8 +19,8 @@ keywords:
   - algotrading
   - python
 maintainers:
-  - email: join.the.nightshift@protonmail.com
-    name: nightshift2k
+  - email: obseries@protonmail.com
+    name: obseries
 sources:
   - https://www.freqtrade.io/
 version: 0.0.5
