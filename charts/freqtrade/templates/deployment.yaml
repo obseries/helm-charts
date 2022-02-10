@@ -325,7 +325,7 @@ spec:
         - name: freqtrade-database
         {{- if .Values.database.persistence }}
           persistentVolumeClaim:
-          {{- if .Values.database.existingClaim) }}
+          {{- if .Values.database.existingClaim }}
             claimName: {{ .Values.database.existingClaim }}
           {{- else }}
             claimName: {{ include "common.names.fullname" . }}-database
