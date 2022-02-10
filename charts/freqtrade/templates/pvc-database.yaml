@@ -1,4 +1,4 @@
-{{- if and .Values.database.persistence (not .database.existingClaim) }}
+{{- if and .Values.database.persistence (not .Values.database.existingClaim) }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
@@ -13,18 +13,18 @@ metadata:
   {{- end }}
 spec:
   accessModes:
-  {{- if not (empty .database.accessModes) }}
-  {{- range .database.accessModes }}
+  {{- if not (empty .Values.database.accessModes) }}
+  {{- range .Values.database.accessModes }}
     - {{ . | quote }}
   {{- end }}
   {{- else }}
-    - {{ .database.accessMode | quote }}
+    - {{ .Values.database.accessMode | quote }}
   {{- end }}
   resources:
     requests:
-      storage: {{ .database.size | quote }}
-  {{- include "common.storage.class" (dict "persistence" .database.persistence "global" .database.global) | nindent 2 }}
-  {{- if .database.dataSource }}
+      storage: {{ .Values.database.size | quote }}
+  {{- include "common.storage.class" (dict "persistence" .Values.database.persistence "global" .Values.database.global) | nindent 2 }}
+  {{- if .Values.database.dataSource }}
   dataSource: {{- include "common.tpldatabase.render" (dict "value" .Values.dataSource "context" $) | nindent 4 }}
   {{- end }}
 {{- end }}
