@@ -1,0 +1,30 @@
+{{- if and .Values.strategies.persistence (not .Values.strategies.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "common.names.fullname" . }}-strategies
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+  {{- if not (empty .Values.strategies.accessModes) }}
+  {{- range .Values.strategies.accessModes }}
+    - {{ . | quote }}
+  {{- end }}
+  {{- else }}
+    - {{ .Values.strategies.accessMode | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .Values.strategies.size | quote }}
+  {{- include "common.storage.class" (dict "persistence" .Values.strategies.persistence "global" .Values.strategies.global) | nindent 2 }}
+  {{- if .Values.strategies.dataSource }}
+  dataSource: {{- include "common.tpldatabase.render" (dict "value" .Values.dataSource "context" $) | nindent 4 }}
+  {{- end }}
+{{- end }}

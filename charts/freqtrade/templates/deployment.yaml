@@ -313,15 +313,17 @@ spec:
               - key: .s3cfg
                 path: .s3cfg
         {{- end }}
-        {{- if not .Values.strategies.persistence }}
         - name: freqtrade-strategies
-          emptyDir: {}
-        {{- else if .Values.strategies.existingClaim }}
-        - name: freqtrade-strategies
+        {{- if .Values.strategies.persistence }}
           persistentVolumeClaim:
+          {{- if .Values.strategies.existingClaim }}
             claimName: {{ .Values.strategies.existingClaim }}
-        {{- end }}
-
+          {{- else }}
+            claimName: {{ include "common.names.fullname" . }}-strategies
+          {{ end }}
+        {{- else }}
+          emptyDir: {}
+        {{ end }}
         - name: freqtrade-database
         {{- if .Values.database.persistence }}
           persistentVolumeClaim:
@@ -333,29 +335,3 @@ spec:
         {{- else }}
           emptyDir: {}
         {{ end }}
-
-
-{{- if or (and .Values.strategies.persistence (not .Values.strategies.existingClaim)) (and .Values.database.persistence (not .Values.database.existingClaim)) }}
-  volumeClaimTemplates:
-  {{- if and .Values.strategies.persistence (not .Values.strategies.existingClaim) }}
-    - metadata:
-        name: "freqtrade-strategies"
-        {{- if .Values.strategies.annotations }}
-        annotations: {{- toYaml .Values.strategies.annotations | nindent 10 }}
-        {{- end }}
-      spec:
-        accessModes: {{- toYaml .Values.strategies.accessModes | nindent 10 }}
-        {{ $storage := dict "global" .Values.global "local" .Values.strategies }}
-        {{ include "freqtrade.storageClass" $storage  }}
-        resources:
-          requests:
-            storage: {{ .Values.strategies.size | quote }}
-        {{- if .Values.strategies.selector }}
-        selector: {{- include "common.tplvalues.render" (dict "value" .Values.strategies.selector "context" $) | nindent 10 }}
-        {{- else if .Values.strategies.existingVolume }}
-        selector:
-          matchLabels:
-            volume: {{ .Values.strategies.existingVolume }}
-        {{- end }}
-  {{- end }}
-{{ end }}
