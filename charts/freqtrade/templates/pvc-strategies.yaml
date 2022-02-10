@@ -23,8 +23,4 @@ spec:
   resources:
     requests:
       storage: {{ .Values.strategies.size | quote }}
-  {{- include "common.storage.class" (dict "persistence" .Values.strategies.persistence "global" .Values.strategies.global) | nindent 2 }}
-  {{- if .Values.strategies.dataSource }}
-  dataSource: {{- include "common.tpldatabase.render" (dict "value" .Values.dataSource "context" $) | nindent 4 }}
-  {{- end }}
 {{- end }}
