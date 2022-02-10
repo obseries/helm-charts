@@ -1,0 +1,30 @@
+{{- if and .Values.database.persistence (not .database.existingClaim) }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "common.names.fullname" . }}-database
+  namespace: {{ .Release.Namespace | quote }}
+  labels: {{- include "common.labels.standard" . | nindent 4 }}
+    {{- if .Values.commonLabels }}
+    {{- include "common.tplvalues.render" ( dict "value" .Values.commonLabels "context" $ ) | nindent 4 }}
+    {{- end }}
+  {{- if .Values.commonAnnotations }}
+  annotations: {{- include "common.tplvalues.render" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
+  {{- end }}
+spec:
+  accessModes:
+  {{- if not (empty .database.accessModes) }}
+  {{- range .database.accessModes }}
+    - {{ . | quote }}
+  {{- end }}
+  {{- else }}
+    - {{ .database.accessMode | quote }}
+  {{- end }}
+  resources:
+    requests:
+      storage: {{ .database.size | quote }}
+  {{- include "common.storage.class" (dict "persistence" .database.persistence "global" .database.global) | nindent 2 }}
+  {{- if .database.dataSource }}
+  dataSource: {{- include "common.tpldatabase.render" (dict "value" .Values.dataSource "context" $) | nindent 4 }}
+  {{- end }}
+{{- end }}

@@ -3,6 +3,8 @@
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 This functionality is in an experimental state and is subject to change. The code is provided as-is with no warranties. 
+   
+Other ideas can taken here: https://github.com/AlexanderGrooff/freqtrade-helm-chart/tree/main/charts/freqtrade
 
 ## Usage
 

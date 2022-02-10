@@ -187,13 +187,13 @@ nodeAffinityPreset:
 ## ref: https://kubernetes.io/docs/concepts/configuration/assign-pod-node/#affinity-and-anti-affinity
 ## Note: podAffinityPreset, podAntiAffinityPreset, and  nodeAffinityPreset will be ignored when it's set
 ##
-affinity:
-  podAntiAffinity:
-    requiredDuringSchedulingIgnoredDuringExecution:
-      - labelSelector:
-          matchLabels:
-            app.kubernetes.io/name: freqtrade
-        topologyKey: kubernetes.io/hostname
+affinity: []
+#  podAntiAffinity:
+#    requiredDuringSchedulingIgnoredDuringExecution:
+#      - labelSelector:
+#          matchLabels:
+#            app.kubernetes.io/name: freqtrade
+#        topologyKey: kubernetes.io/hostname
 
 ## @param nodeSelector Node labels for pod assignment. Evaluated as a template.
 ## Ref: https://kubernetes.io/docs/user-guide/node-selection/
@@ -448,7 +448,7 @@ strategies:
   ## @param strategies.accessModes Persistent Volume Access Modes
   ##
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   ## @param strategies.size Persistent Volume Size
   ##
   size: 1Gi
@@ -544,7 +544,7 @@ database:
   ## @param database.accessModes Persistent Volume Access Modes
   ##
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   ## @param database.size Persistent Volume Size
   ##
   size: 1Gi
@@ -712,6 +712,7 @@ configuration:
   - method: StaticPairList
   telegram:
     enabled: false
+    chat_id: abcdef
   api_server:
     enabled: false
     listen_ip_address: 127.0.0.1
