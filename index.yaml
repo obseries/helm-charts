@@ -64,4 +64,37 @@ entries:
     urls:
     - https://github.com/obseries/helm-charts/releases/download/freqtrade-0.0.5/freqtrade-0.0.5.tgz
     version: 0.0.5
-generated: "2022-02-09T21:14:23.877129484Z"
+  kucoin-proxy:
+  - annotations:
+      category: Financial
+    apiVersion: v2
+    appVersion: 1.2.6
+    created: "2022-02-12T13:32:21.580292972Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: 'A websocket proxy written in GoLang, that caches the endpoints:
+      klines, depth, ticker/24hr, and exchangeInfo. It resembles the Kucoin API behaviour.
+      And has a primary usecase to eliminate ratelimits when querying the Kucoin API
+      from a single IP. https://github.com/mikekonan/exchange-proxy/blob/main/docs/ops/freqtrade.md'
+    digest: 9774f5add16eac9ed8ab060ac7c9d3d43d72620a8651d4e255b439eef6982254
+    home: https://github.com/obseries/helm-charts/tree/master/charts/kucoin-proxy
+    keywords:
+    - algotrading
+    - golang
+    - crypto
+    - kucoin
+    maintainers:
+    - email: obseries@protonmail.com
+      name: obseries
+    name: kucoin-proxy
+    sources:
+    - https://github.com/mikekonan/exchange-proxy
+    type: application
+    urls:
+    - https://github.com/obseries/helm-charts/releases/download/kucoin-proxy-0.0.2/kucoin-proxy-0.0.2.tgz
+    version: 0.0.2
+generated: "2022-02-12T13:32:21.580297772Z"
