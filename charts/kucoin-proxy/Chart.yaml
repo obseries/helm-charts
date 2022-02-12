@@ -1,0 +1,26 @@
+apiVersion: v2
+name: kucoin-proxy
+description: "A websocket proxy written in GoLang, that caches the endpoints: klines, depth, ticker/24hr, and exchangeInfo. It resembles the Kucoin API behaviour. And has a primary usecase to eliminate ratelimits when querying the Kucoin API from a single IP. https://github.com/mikekonan/exchange-proxy/blob/main/docs/ops/freqtrade.md"
+type: application
+annotations:
+  category: Financial
+dependencies:
+  - name: common
+    repository: https://charts.bitnami.com/bitnami
+    tags:
+      - bitnami-common
+    version: 1.x.x
+engine: gotpl
+home: https://github.com/obseries/helm-charts/tree/master/charts/kucoin-proxy
+keywords:
+  - algotrading
+  - golang
+  - crypto
+  - kucoin
+maintainers:
+  - email: obseries@protonmail.com
+    name: obseries
+sources:
+  - https://github.com/mikekonan/exchange-proxy
+version: 0.0.2
+appVersion: "1.2.6"
