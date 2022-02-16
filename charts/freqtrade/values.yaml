@@ -645,6 +645,16 @@ additionalPipModules: ""
 ## Internally the API-Server is always enabled, to make use of the `rest_client.py`
 ## for the `preStop` hook to shutdown the bot more gracefully.
 apiEnabled: true
+## @param preConfig permette di impostare uno o più file di configurazione prima di quello
+## ufficiale
+## e.g:
+##   preConfig: "--config /pre-config.json"
+preConfig: ""
+## @param postConfig permette di impostare uno o più file di configurazione dopo quello
+## ufficiale
+## e.g:
+##   postConfig: "--config /post-config.json"
+postConfig: ""
 ## To configure Freqtrade, you must specify ONE of the following two options.
 ## @param configurationConfigMap Specifies the name of an externally-defined ConfigMap to use as the
 ## configuration (this is mutually exclusive with `configuration`)
