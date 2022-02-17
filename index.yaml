@@ -5,6 +5,38 @@ entries:
       category: Financial
     apiVersion: v2
     appVersion: 1.2.4
+    created: "2022-02-17T11:30:25.163480892Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: 'A websocket proxy written in GoLang, that caches the endpoints:
+      klines, depth, ticker/24hr, and exchangeInfo. It resembles the Binance API behaviour.
+      And has a primary usecase to eliminate ratelimits when querying the Binance
+      API from a single IP.'
+    digest: 9abbc1feeda8604cdb416e1604a4f02b5cc9121334a826f00872e697a231290b
+    home: https://github.com/obseries/helm-charts/tree/master/charts/binance-proxy
+    keywords:
+    - algotrading
+    - golang
+    - crypto
+    - binance
+    maintainers:
+    - email: obseries@protonmail.com
+      name: obseries
+    name: binance-proxy
+    sources:
+    - https://github.com/nightshift2k/binance-proxy
+    type: application
+    urls:
+    - https://github.com/obseries/helm-charts/releases/download/binance-proxy-0.0.3/binance-proxy-0.0.3.tgz
+    version: 0.0.3
+  - annotations:
+      category: Financial
+    apiVersion: v2
+    appVersion: 1.2.4
     created: "2022-02-09T21:14:23.681567379Z"
     dependencies:
     - name: common
@@ -34,6 +66,36 @@ entries:
     - https://github.com/obseries/helm-charts/releases/download/binance-proxy-0.0.2/binance-proxy-0.0.2.tgz
     version: 0.0.2
   freqtrade:
+  - annotations:
+      category: Financial
+    apiVersion: v2
+    appVersion: "2022.1"
+    created: "2022-02-17T11:30:25.299069762Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: A free and open source crypto trading bot written in Python
+    digest: c7656ee8316fa07d24090d6e6a355703141ab44e31eece170abbec89f95db2e0
+    home: https://github.com/obseries/helm-charts/tree/master/charts/freqtrade
+    icon: https://raw.githubusercontent.com/freqtrade/freqtrade/develop/docs/images/logo.png
+    keywords:
+    - freqtrade
+    - crypto
+    - algotrading
+    - python
+    maintainers:
+    - email: obseries@protonmail.com
+      name: obseries
+    name: freqtrade
+    sources:
+    - https://www.freqtrade.io/
+    type: application
+    urls:
+    - https://github.com/obseries/helm-charts/releases/download/freqtrade-0.0.6/freqtrade-0.0.6.tgz
+    version: 0.0.6
   - annotations:
       category: Financial
     apiVersion: v2
@@ -69,6 +131,38 @@ entries:
       category: Financial
     apiVersion: v2
     appVersion: 1.2.6
+    created: "2022-02-17T11:30:25.442630737Z"
+    dependencies:
+    - name: common
+      repository: https://charts.bitnami.com/bitnami
+      tags:
+      - bitnami-common
+      version: 1.x.x
+    description: 'A websocket proxy written in GoLang, that caches the endpoints:
+      klines, depth, ticker/24hr, and exchangeInfo. It resembles the Kucoin API behaviour.
+      And has a primary usecase to eliminate ratelimits when querying the Kucoin API
+      from a single IP. https://github.com/mikekonan/exchange-proxy/blob/main/docs/ops/freqtrade.md'
+    digest: b26bdd33028b87c4726af4d09cbb808ccc9ea332e83cce8c441ba00955fcb3d6
+    home: https://github.com/obseries/helm-charts/tree/master/charts/kucoin-proxy
+    keywords:
+    - algotrading
+    - golang
+    - crypto
+    - kucoin
+    maintainers:
+    - email: obseries@protonmail.com
+      name: obseries
+    name: kucoin-proxy
+    sources:
+    - https://github.com/mikekonan/exchange-proxy
+    type: application
+    urls:
+    - https://github.com/obseries/helm-charts/releases/download/kucoin-proxy-0.0.3/kucoin-proxy-0.0.3.tgz
+    version: 0.0.3
+  - annotations:
+      category: Financial
+    apiVersion: v2
+    appVersion: 1.2.6
     created: "2022-02-12T13:32:21.580292972Z"
     dependencies:
     - name: common
@@ -97,4 +191,4 @@ entries:
     urls:
     - https://github.com/obseries/helm-charts/releases/download/kucoin-proxy-0.0.2/kucoin-proxy-0.0.2.tgz
     version: 0.0.2
-generated: "2022-02-12T13:32:21.580297772Z"
+generated: "2022-02-17T11:30:25.442648437Z"
