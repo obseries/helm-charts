@@ -22,5 +22,5 @@ maintainers:
     name: obseries
 sources:
   - https://github.com/nightshift2k/binance-proxy
-version: 0.0.2
+version: 0.0.3
 appVersion: "1.2.4"
