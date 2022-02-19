@@ -26,10 +26,10 @@ spec:
         {{- end }}
       {{- end }}
     spec:
-      {{- include "binance-proxy.imagePullSecrets" . | nindent 6 }}
+      {{- include "kucoin-proxy.imagePullSecrets" . | nindent 6 }}
       automountServiceAccountToken: {{ .Values.serviceAccount.autoMount }}
       shareProcessNamespace: {{ .Values.sidecarSingleProcessNamespace }}
-      serviceAccountName: {{ template "binance-proxy.serviceAccountName" . }}
+      serviceAccountName: {{ template "kucoin-proxy.serviceAccountName" . }}
       {{- if .Values.hostAliases }}
       hostAliases: {{- include "common.tplvalues.render" (dict "value" .Values.hostAliases "context" $) | nindent 8 }}
       {{- end }}
@@ -54,8 +54,8 @@ spec:
       securityContext: {{- omit .Values.podSecurityContext "enabled" | toYaml | nindent 8 }}
       {{- end }}
       containers:
-        - name: binance-proxy
-          image: {{ include "binance-proxy.image" . }}
+        - name: kucoin-proxy
+          image: {{ include "kucoin-proxy.image" . }}
           imagePullPolicy: {{ .Values.image.pullPolicy | quote }}
           {{- if .Values.containerSecurityContext.enabled }}
           securityContext: {{- omit .Values.containerSecurityContext "enabled" | toYaml | nindent 12 }}
