@@ -40,6 +40,10 @@ commonLabels: {}
 ##
 commonAnnotations: {}
 
+## @section Cronjob
+
+restartCron: 0 4 * * *
+
 ## @section Freqtrade parameters
 
 ## Freqtrade image version
