@@ -23,5 +23,5 @@ maintainers:
     name: obseries
 sources:
   - https://www.freqtrade.io/
-version: 0.0.8
+version: 0.1.0
 appVersion: "2022.2.1"
