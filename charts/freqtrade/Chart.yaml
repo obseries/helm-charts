@@ -10,7 +10,6 @@ dependencies:
     tags:
       - bitnami-common
     version: 1.x.x
-engine: gotpl
 home: https://github.com/obseries/helm-charts/tree/master/charts/freqtrade
 icon: https://raw.githubusercontent.com/freqtrade/freqtrade/develop/docs/images/logo.png
 keywords:
