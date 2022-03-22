@@ -70,7 +70,7 @@ entries:
       category: Financial
     apiVersion: v2
     appVersion: 2022.2.2
-    created: "2022-03-22T11:03:12.450321607Z"
+    created: "2022-03-22T11:59:04.431731619Z"
     dependencies:
     - name: common
       repository: https://charts.bitnami.com/bitnami
@@ -78,7 +78,7 @@ entries:
       - bitnami-common
       version: 1.x.x
     description: A free and open source crypto trading bot written in Python
-    digest: 2f6f3668bf549337e2b4e079a31ddf1ecd11fc698ed23262d6531f2cbec9fdf0
+    digest: 49a4bbaa2155816c4571b52d17cbbb32161215e8b3584fb6aca1fe6634182eda
     home: https://github.com/obseries/helm-charts/tree/master/charts/freqtrade
     icon: https://raw.githubusercontent.com/freqtrade/freqtrade/develop/docs/images/logo.png
     keywords:
@@ -94,8 +94,8 @@ entries:
     - https://www.freqtrade.io/
     type: application
     urls:
-    - https://github.com/obseries/helm-charts/releases/download/freqtrade-0.2.2/freqtrade-0.2.2.tgz
-    version: 0.2.2
+    - https://github.com/obseries/helm-charts/releases/download/freqtrade-2.2.0/freqtrade-2.2.0.tgz
+    version: 2.2.0
   - annotations:
       category: Financial
     apiVersion: v2
@@ -343,4 +343,4 @@ entries:
     urls:
     - https://github.com/obseries/helm-charts/releases/download/kucoin-proxy-0.0.2/kucoin-proxy-0.0.2.tgz
     version: 0.0.2
-generated: "2022-03-22T11:03:12.450477629Z"
+generated: "2022-03-22T11:59:04.431835052Z"
