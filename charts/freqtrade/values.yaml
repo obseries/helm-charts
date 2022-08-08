@@ -58,7 +58,7 @@ restartCron: 0 4 * * *
 image:
   registry: docker.io
   repository: freqtradeorg/freqtrade
-  tag: 2022.3
+  tag: 2022.7
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -692,22 +692,22 @@ configuration:
   fiat_display_currency: USD
   dry_run: true
   cancel_open_orders_on_exit: false
-  unfilledtimeout:
-    buy: 10
-    sell: 30
-  bid_strategy:
-    price_side: bid
-    ask_last_balance: 0
-    use_order_book: false
-    order_book_top: 1
-    check_depth_of_market:
-      enabled: false
-      bids_to_ask_delta: 1
-  ask_strategy:
-    price_side: ask
-    use_order_book: false
-    order_book_min: 1
-    order_book_max: 1
+#  unfilledtimeout:
+#    buy: 10
+#    sell: 30
+#  bid_strategy:
+#    price_side: bid
+#    ask_last_balance: 0
+#    use_order_book: false
+#    order_book_top: 1
+#    check_depth_of_market:
+#      enabled: false
+#      bids_to_ask_delta: 1
+#  ask_strategy:
+#    price_side: ask
+#    use_order_book: false
+#    order_book_min: 1
+#    order_book_max: 1
 #    use_sell_signal: true
 #    sell_profit_only: false
 #    ignore_roi_if_buy_signal: false
