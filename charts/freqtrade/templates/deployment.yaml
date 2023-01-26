@@ -219,7 +219,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ tpl (include "common.secrets.name" (dict "existingSecret" .Values.auth.exchange.existingSecret "defaultNameSuffix" "exchange" "context" $)) $ }}
-                  key: {{ include "common.secrets.key" (dict "existingSecret" .Values.auth.exchange.existingSecret "key" "exchange-password") }}
+                  key: {{ include "common.secrets.key" (dict "existingSecret" .Values.auth.exchange.existingSecret "key" "exchange-password") | quote}}
             {{- if or .Values.auth.telegram.existingSecret .Values.auth.telegram.token }}
             - name: FREQTRADE__TELEGRAM__TOKEN
               valueFrom:
